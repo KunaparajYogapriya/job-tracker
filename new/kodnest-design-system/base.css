@@ -1,0 +1,239 @@
+/**
+ * KodNest Premium Build System — Base Styles
+ * Calm, Intentional, Coherent, Confident.
+ * Load tokens.css before this file.
+ */
+
+@import 'tokens.css';
+
+/* ─── FONT IMPORTS ─── */
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+/* ─── RESET & BASE ─── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── TYPOGRAPHY ─── */
+h1, h2, h3, .heading {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: var(--text-h1-spacing);
+}
+
+h1 {
+  font-size: var(--text-h1-size);
+  line-height: var(--text-h1-line);
+  margin: 0 0 var(--space-sm) 0;
+}
+
+h2 {
+  font-size: var(--text-h2-size);
+  line-height: var(--text-h2-line);
+  margin: 0 0 var(--space-sm) 0;
+}
+
+h3 {
+  font-size: var(--text-h3-size);
+  line-height: var(--text-h3-line);
+  margin: 0 0 var(--space-xs) 0;
+}
+
+p {
+  margin: 0 0 var(--space-sm) 0;
+  max-width: var(--text-body-max-width);
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--button-height);
+  padding: 0 var(--space-md);
+  font-family: var(--font-body);
+  font-size: var(--text-body-size);
+  font-weight: 500;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color var(--transition-duration) var(--transition-easing),
+              border-color var(--transition-duration) var(--transition-easing),
+              color var(--transition-duration) var(--transition-easing);
+}
+
+.btn-primary {
+  background: var(--color-accent);
+  color: white;
+  border-color: var(--color-accent);
+}
+
+.btn-primary:hover {
+  background: #6D0000;
+  border-color: #6D0000;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.btn-secondary:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* ─── INPUTS ─── */
+.input {
+  width: 100%;
+  min-height: var(--input-height);
+  padding: 0 var(--space-sm);
+  font-family: var(--font-body);
+  font-size: var(--text-body-size);
+  color: var(--color-text);
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  transition: border-color var(--transition-duration) var(--transition-easing);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+}
+
+.input::placeholder {
+  color: rgba(17, 17, 17, 0.4);
+}
+
+/* ─── CARDS ─── */
+.card {
+  background: white;
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+  padding: var(--card-padding);
+}
+
+/* ─── LAYOUT STRUCTURE ─── */
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.layout-topbar {
+  height: var(--topbar-height);
+  padding: 0 var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.layout-context {
+  padding: var(--space-lg) var(--space-md) var(--space-md);
+}
+
+.layout-context h1 {
+  margin-bottom: var(--space-xs);
+}
+
+.layout-workspace {
+  flex: 1;
+  display: flex;
+  gap: var(--layout-gap);
+  padding: var(--space-md);
+  align-items: flex-start;
+}
+
+.layout-primary {
+  width: var(--workspace-width);
+  flex-shrink: 0;
+}
+
+.layout-secondary {
+  width: var(--panel-width);
+  flex-shrink: 0;
+}
+
+.layout-footer {
+  min-height: var(--footer-height);
+  padding: var(--space-sm) var(--space-md);
+  border-top: 1px solid var(--color-border);
+}
+
+/* ─── PROOF FOOTER CHECKLIST ─── */
+.proof-checklist {
+  display: flex;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.proof-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--text-small-size);
+}
+
+.proof-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-accent);
+}
+
+/* ─── STATUS BADGE ─── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-xs);
+  font-size: var(--text-small-size);
+  font-weight: 500;
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+}
+
+.badge-neutral {
+  background: white;
+}
+
+.badge-success {
+  background: rgba(74, 107, 74, 0.12);
+  border-color: var(--color-success);
+  color: var(--color-success);
+}
+
+.badge-warning {
+  background: rgba(139, 0, 0, 0.12);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* ─── COPYABLE PROMPT BOX ─── */
+.prompt-box {
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-sm);
+  font-family: monospace;
+  font-size: var(--text-small-size);
+  position: relative;
+}
+
+/* Transitions: 150–200ms, ease-in-out. Applied per-component. No bounce, no parallax. */

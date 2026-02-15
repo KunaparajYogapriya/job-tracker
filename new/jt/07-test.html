@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Checklist — Job Notification Tracker</title>
+  <link rel="stylesheet" href="../kodnest-design-system/tokens.css">
+  <link rel="stylesheet" href="../kodnest-design-system/base.css">
+  <link rel="stylesheet" href="../app.css">
+  <link rel="stylesheet" href="test-checklist.css">
+</head>
+<body>
+  <div class="layout">
+    <nav class="app-nav">
+      <a href="../index.html" class="app-nav-brand">Job Notification Tracker</a>
+      <div class="app-nav-links">
+        <a href="../dashboard.html">Dashboard</a>
+        <a href="../saved.html">Saved</a>
+        <a href="../digest.html">Digest</a>
+        <a href="../settings.html">Settings</a>
+        <a href="../proof.html">Proof</a>
+      </div>
+    </nav>
+    <main class="app-main">
+      <h1>Test Checklist</h1>
+      <p style="margin-bottom: var(--space-lg);">Verify all items before shipping.</p>
+
+      <div id="test-summary" class="test-summary card">
+        <p id="test-summary-count" class="test-summary-count">Tests Passed: 0 / 10</p>
+        <p id="test-summary-warning" class="test-summary-warning" style="display: none;">Resolve all issues before shipping.</p>
+      </div>
+
+      <div class="test-actions">
+        <button type="button" id="test-reset-btn" class="btn btn-secondary btn-sm">Reset Test Status</button>
+      </div>
+
+      <ul id="test-checklist" class="test-checklist card">
+        <li class="test-item" data-index="0">
+          <label class="test-item-label">
+            <input type="checkbox" class="test-item-checkbox">
+            <span>Preferences persist after refresh</span>
+          </label>
+          <span class="test-item-tooltip" title="Save preferences on /settings, reload page, confirm form is prefilled.">How to test</span>
+        </li>
+        <li class="test-item" data-index="1">
+          <label class="test-item-label">
+            <input type="checkbox" class="test-item-checkbox">
+            <span>Match score calculates correctly</span>
+          </label>
+          <span class="test-item-tooltip" title="Set role keywords and skills in Settings. On Dashboard, confirm job cards show match % and scores align with preferences.">How to test</span>
+        </li>
+        <li class="test-item" data-index="2">
+          <label class="test-item-label">
+            <input type="checkbox" class="test-item-checkbox">
+            <span>"Show only matches" toggle works</span>
+          </label>
+          <span class="test-item-tooltip" title="Enable 'Show only jobs above my threshold' on Dashboard. List should filter to jobs at or above your min score.">How to test</span>
+        </li>
+        <li class="test-item" data-index="3">
+          <label class="test-item-label">
+            <input type="checkbox" class="test-item-checkbox">
+            <span>Save job persists after refresh</span>
+          </label>
+          <span class="test-item-tooltip" title="Click Save on a job, reload, open /saved. Job should still appear.">How to test</span>
+        </li>
+        <li class="test-item" data-index="4">
+          <label class="test-item-label">
+            <input type="checkbox" class="test-item-checkbox">
+            <span>Apply opens in new tab</span>
+          </label>
+          <span class="test-item-tooltip" title="Click Apply on any job card. Apply URL should open in a new browser tab.">How to test</span>
+        </li>
+        <li class="test-item" data-index="5">
+          <label class="test-item-label">
+            <input type="checkbox" class="test-item-checkbox">
+            <span>Status update persists after refresh</span>
+          </label>
+          <span class="test-item-tooltip" title="Change a job status to Applied (or Rejected/Selected), reload. Status should remain.">How to test</span>
+        </li>
+        <li class="test-item" data-index="6">
+          <label class="test-item-label">
+            <input type="checkbox" class="test-item-checkbox">
+            <span>Status filter works correctly</span>
+          </label>
+          <span class="test-item-tooltip" title="Filter by Applied (or other status) on Dashboard. Only jobs with that status should show.">How to test</span>
+        </li>
+        <li class="test-item" data-index="7">
+          <label class="test-item-label">
+            <input type="checkbox" class="test-item-checkbox">
+            <span>Digest generates top 10 by score</span>
+          </label>
+          <span class="test-item-tooltip" title="On /digest, click Generate. List should show up to 10 jobs, ordered by match score then recency.">How to test</span>
+        </li>
+        <li class="test-item" data-index="8">
+          <label class="test-item-label">
+            <input type="checkbox" class="test-item-checkbox">
+            <span>Digest persists for the day</span>
+          </label>
+          <span class="test-item-tooltip" title="Generate digest, refresh /digest. Same digest should load without regenerating.">How to test</span>
+        </li>
+        <li class="test-item" data-index="9">
+          <label class="test-item-label">
+            <input type="checkbox" class="test-item-checkbox">
+            <span>No console errors on main pages</span>
+          </label>
+          <span class="test-item-tooltip" title="Open DevTools Console. Visit /, /dashboard, /settings, /saved, /digest. No red errors should appear.">How to test</span>
+        </li>
+      </ul>
+    </main>
+  </div>
+
+  <script src="test-checklist.js"></script>
+</body>
+</html>

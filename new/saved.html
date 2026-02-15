@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saved — Job Notification Tracker</title>
+  <link rel="stylesheet" href="kodnest-design-system/tokens.css">
+  <link rel="stylesheet" href="kodnest-design-system/base.css">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <div class="layout">
+    <nav class="app-nav">
+      <a href="index.html" class="app-nav-brand">Job Notification Tracker</a>
+      <div class="app-nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="saved.html" class="active">Saved</a>
+        <a href="digest.html">Digest</a>
+        <a href="settings.html">Settings</a>
+        <a href="proof.html">Proof</a>
+      </div>
+    </nav>
+    <main class="app-main">
+      <h1>Saved Jobs</h1>
+      <p style="margin-bottom: var(--space-md);">Jobs you've saved for later.</p>
+      <div id="saved-cards-container" class="job-cards"></div>
+      <div id="saved-empty-state" class="empty-state">
+        <h2>No saved jobs.</h2>
+        <p>Jobs you save will appear here.</p>
+      </div>
+    </main>
+  </div>
+
+  <div id="job-modal-overlay" class="modal-overlay">
+    <div id="job-modal-content" class="modal-content"></div>
+  </div>
+
+  <script src="jobs-data.js"></script>
+  <script src="app.js"></script>
+  <script>
+    (function() {
+      const container = document.getElementById('saved-cards-container');
+      const emptyState = document.getElementById('saved-empty-state');
+
+      function render() {
+        const savedIds = getSavedIds();
+        const jobs = JOBS_DATA.filter(j => savedIds.includes(j.id));
+
+        if (jobs.length === 0) {
+          container.style.display = 'none';
+          emptyState.style.display = 'block';
+        } else {
+          container.style.display = 'flex';
+          emptyState.style.display = 'none';
+          initJobCards(container, jobs, {
+            showSave: false,
+            showUnsave: true,
+            onUnsave: function(card) {
+              card.remove();
+              if (container.children.length === 0) {
+                container.style.display = 'none';
+                emptyState.style.display = 'block';
+              }
+            }
+          });
+        }
+      }
+
+      render();
+
+      window.addEventListener('storage', function(e) {
+        if (e.key === 'jobTrackerSavedIds') render();
+      });
+    })();
+  </script>
+</body>
+</html>

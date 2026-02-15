@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digest — Job Notification Tracker</title>
+  <link rel="stylesheet" href="kodnest-design-system/tokens.css">
+  <link rel="stylesheet" href="kodnest-design-system/base.css">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <div class="layout">
+    <nav class="app-nav">
+      <a href="index.html" class="app-nav-brand">Job Notification Tracker</a>
+      <div class="app-nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="saved.html">Saved</a>
+        <a href="digest.html" class="active">Digest</a>
+        <a href="settings.html">Settings</a>
+        <a href="proof.html">Proof</a>
+      </div>
+    </nav>
+    <main class="app-main">
+      <h1>Daily Digest</h1>
+      <p style="margin-bottom: var(--space-md);">Your personalized 9AM job digest.</p>
+
+      <div id="digest-no-prefs" class="digest-block card" style="display: none;">
+        <p style="margin: 0;">Set preferences to generate a personalized digest.</p>
+        <a href="settings.html" class="btn btn-primary" style="margin-top: var(--space-md);">Go to Settings</a>
+      </div>
+
+      <div id="digest-actions" style="display: none;">
+        <button type="button" id="digest-generate-btn" class="btn btn-primary">Generate Today's 9AM Digest (Simulated)</button>
+      </div>
+
+      <div id="digest-no-matches" class="empty-state" style="display: none;">
+        <h2>No matching roles today.</h2>
+        <p>Check again tomorrow.</p>
+      </div>
+
+      <div id="digest-content" class="digest-card card" style="display: none;">
+        <div class="digest-header">
+          <h2>Top 10 Jobs For You — 9AM Digest</h2>
+          <p class="digest-date" id="digest-date"></p>
+        </div>
+        <ul id="digest-jobs-list" class="digest-jobs-list"></ul>
+        <div class="digest-footer">
+          <p>This digest was generated based on your preferences.</p>
+        </div>
+        <div class="digest-actions-row">
+          <button type="button" id="digest-copy-btn" class="btn btn-secondary">Copy Digest to Clipboard</button>
+          <a id="digest-email-link" href="#" class="btn btn-secondary">Create Email Draft</a>
+        </div>
+      </div>
+
+      <div id="digest-status-section" class="digest-card card digest-status-updates" style="display: none;">
+        <h3>Recent Status Updates</h3>
+        <ul id="digest-status-list" class="digest-status-list"></ul>
+        <p id="digest-status-empty" class="digest-status-empty" style="display: none;">No recent status updates.</p>
+      </div>
+
+      <p class="digest-demo-note" id="digest-demo-note" style="display: none;">Demo Mode: Daily 9AM trigger simulated manually.</p>
+    </main>
+  </div>
+
+  <script src="jobs-data.js"></script>
+  <script src="app.js"></script>
+  <script>
+    (function() {
+      const noPrefs = document.getElementById('digest-no-prefs');
+      const actions = document.getElementById('digest-actions');
+      const noMatches = document.getElementById('digest-no-matches');
+      const content = document.getElementById('digest-content');
+      const demoNote = document.getElementById('digest-demo-note');
+      const generateBtn = document.getElementById('digest-generate-btn');
+      const jobsList = document.getElementById('digest-jobs-list');
+      const digestDateEl = document.getElementById('digest-date');
+      const copyBtn = document.getElementById('digest-copy-btn');
+      const emailLink = document.getElementById('digest-email-link');
+      const statusSection = document.getElementById('digest-status-section');
+      const statusList = document.getElementById('digest-status-list');
+      const statusEmpty = document.getElementById('digest-status-empty');
+
+      let currentDigestJobs = [];
+      let currentDigestDate = '';
+
+      function showState() {
+        const prefs = getPreferences();
+        const today = getTodayDateString();
+        const existing = getDigestForDate(today);
+
+        noPrefs.style.display = 'none';
+        actions.style.display = 'none';
+        noMatches.style.display = 'none';
+        content.style.display = 'none';
+        demoNote.style.display = 'none';
+
+        if (!prefs) {
+          noPrefs.style.display = 'block';
+          return;
+        }
+
+        actions.style.display = 'block';
+        demoNote.style.display = 'block';
+        renderStatusUpdates();
+
+        if (existing && Array.isArray(existing) && existing.length > 0) {
+          currentDigestJobs = existing;
+          currentDigestDate = today;
+          renderDigest(existing, today);
+          content.style.display = 'block';
+        }
+      }
+
+      function renderDigest(jobs, date) {
+        const dateFormatted = new Date(date + 'T12:00:00').toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        digestDateEl.textContent = dateFormatted;
+        jobsList.innerHTML = jobs.map((j, i) => {
+          const scoreClass = (j._matchScore >= 80) ? 'badge-score-high' : (j._matchScore >= 60) ? 'badge-score-medium' : (j._matchScore >= 40) ? 'badge-score-neutral' : 'badge-score-low';
+          return '<li class="digest-job-item">' +
+            '<div class="digest-job-head">' +
+              '<span class="digest-job-title">' + escapeHtml(j.title || '') + '</span>' +
+              '<span class="badge ' + scoreClass + '">' + (j._matchScore ?? 0) + '%</span>' +
+            '</div>' +
+            '<div class="digest-job-meta">' + escapeHtml(j.company || '') + ' · ' + escapeHtml(j.location || '') + ' · ' + escapeHtml(j.experience || '') + '</div>' +
+            '<a href="' + escapeHtml(j.applyUrl || '#') + '" target="_blank" rel="noopener" class="btn btn-primary btn-sm">Apply</a>' +
+          '</li>';
+        }).join('');
+      }
+
+      function runGenerate() {
+        const prefs = getPreferences();
+        if (!prefs) return;
+        const today = getTodayDateString();
+        const existing = getDigestForDate(today);
+        if (existing && Array.isArray(existing) && existing.length > 0) {
+          currentDigestJobs = existing;
+          currentDigestDate = today;
+          renderDigest(existing, today);
+          content.style.display = 'block';
+          noMatches.style.display = 'none';
+          return;
+        }
+        const jobs = generateDigestJobs(prefs);
+        if (jobs.length === 0) {
+          content.style.display = 'none';
+          noMatches.style.display = 'block';
+          return;
+        }
+        saveDigest(today, jobs);
+        currentDigestJobs = jobs;
+        currentDigestDate = today;
+        renderDigest(jobs, today);
+        content.style.display = 'block';
+        noMatches.style.display = 'none';
+      }
+
+      generateBtn.addEventListener('click', runGenerate);
+
+      copyBtn.addEventListener('click', function() {
+        const text = formatDigestAsPlainText(currentDigestJobs, currentDigestDate);
+        navigator.clipboard.writeText(text).then(function() {
+          copyBtn.textContent = 'Copied';
+          setTimeout(function() { copyBtn.textContent = 'Copy Digest to Clipboard'; }, 1500);
+        }).catch(function() {
+          copyBtn.textContent = 'Copy failed';
+          setTimeout(function() { copyBtn.textContent = 'Copy Digest to Clipboard'; }, 1500);
+        });
+      });
+
+      emailLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        const text = formatDigestAsPlainText(currentDigestJobs, currentDigestDate);
+        const body = encodeURIComponent(text);
+        const subject = encodeURIComponent('My 9AM Job Digest');
+        window.location.href = 'mailto:?subject=' + subject + '&body=' + body;
+      });
+
+      function renderStatusUpdates() {
+        const history = getStatusHistory();
+        if (history.length === 0) {
+          statusSection.style.display = 'block';
+          statusList.innerHTML = '';
+          statusEmpty.style.display = 'block';
+          return;
+        }
+        statusEmpty.style.display = 'none';
+        statusSection.style.display = 'block';
+        statusList.innerHTML = history.slice(0, 20).map(function(item) {
+          const d = new Date(item.dateChanged);
+          const dateStr = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+          return '<li class="digest-status-item">' +
+            '<strong>' + escapeHtml(item.title || '') + '</strong>' +
+            '<span>' + escapeHtml(item.company || '') + ' · ' + escapeHtml(item.status) + ' · ' + dateStr + '</span>' +
+          '</li>';
+        }).join('');
+      }
+
+      showState();
+    })();
+  </script>
+</body>
+</html>

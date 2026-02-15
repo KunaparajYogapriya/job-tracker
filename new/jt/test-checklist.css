@@ -1,0 +1,170 @@
+/**
+ * Test Checklist — jt/07-test
+ */
+
+.test-summary {
+  padding: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.test-summary-count {
+  margin: 0;
+  font-weight: 600;
+  font-size: var(--text-body-size);
+}
+
+.test-summary-warning {
+  margin: var(--space-xs) 0 0 0;
+  font-size: var(--text-small-size);
+  color: var(--color-accent);
+}
+
+.test-actions {
+  margin-bottom: var(--space-md);
+}
+
+.test-checklist {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-md);
+}
+
+.test-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.test-item:last-child {
+  border-bottom: none;
+}
+
+.test-item-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  cursor: pointer;
+  flex: 1;
+}
+
+.test-item-label input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-accent);
+}
+
+.test-item-tooltip {
+  font-size: 0.8125rem;
+  color: rgba(17, 17, 17, 0.5);
+  cursor: help;
+  flex-shrink: 0;
+}
+
+.test-item-tooltip:hover {
+  color: var(--color-accent);
+}
+
+.ship-locked,
+.ship-ready {
+  padding: var(--space-lg);
+  text-align: center;
+}
+
+.ship-locked h2,
+.ship-ready h2 {
+  margin-bottom: var(--space-sm);
+}
+
+.ship-locked p,
+.ship-ready p {
+  margin-bottom: var(--space-md);
+}
+
+.ship-locked .btn {
+  margin-top: var(--space-sm);
+}
+
+/* ─── PROOF PAGE (jt/proof) ─── */
+.proof-section {
+  padding: var(--space-lg);
+  margin-bottom: var(--space-md);
+}
+
+.proof-section h2 {
+  margin: 0 0 var(--space-md) 0;
+  font-size: 1.25rem;
+}
+
+.step-summary {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.step-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-xs) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.step-item:last-child {
+  border-bottom: none;
+}
+
+.step-status-completed {
+  color: var(--color-success);
+  font-size: var(--text-small-size);
+}
+
+.step-status-pending {
+  color: rgba(17, 17, 17, 0.5);
+  font-size: var(--text-small-size);
+}
+
+.proof-error {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--color-accent);
+  margin-top: var(--space-xs);
+}
+
+.proof-actions {
+  margin-top: var(--space-md);
+}
+
+.ship-status-badge {
+  display: inline-block;
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--text-small-size);
+  font-weight: 500;
+  border-radius: var(--radius);
+  margin-bottom: var(--space-md);
+}
+
+.ship-status-not-started {
+  background: rgba(17, 17, 17, 0.08);
+  border: 1px solid var(--color-border);
+}
+
+.ship-status-in-progress {
+  background: rgba(139, 105, 20, 0.12);
+  border: 1px solid #8B6914;
+  color: #8B6914;
+}
+
+.ship-status-shipped {
+  background: rgba(74, 107, 74, 0.15);
+  border: 1px solid var(--color-success);
+  color: var(--color-success);
+}
+
+.ship-success-message {
+  margin-top: var(--space-md);
+  font-size: var(--text-body-size);
+  color: var(--color-success);
+}

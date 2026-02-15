@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proof — Job Notification Tracker</title>
+  <link rel="stylesheet" href="../kodnest-design-system/tokens.css">
+  <link rel="stylesheet" href="../kodnest-design-system/base.css">
+  <link rel="stylesheet" href="../app.css">
+  <link rel="stylesheet" href="test-checklist.css">
+</head>
+<body>
+  <div class="layout">
+    <nav class="app-nav">
+      <a href="../index.html" class="app-nav-brand">Job Notification Tracker</a>
+      <div class="app-nav-links">
+        <a href="../dashboard.html">Dashboard</a>
+        <a href="../saved.html">Saved</a>
+        <a href="../digest.html">Digest</a>
+        <a href="../settings.html">Settings</a>
+        <a href="../proof.html">Proof</a>
+      </div>
+    </nav>
+    <main class="app-main">
+      <h1>Project 1 — Job Notification Tracker</h1>
+
+      <section class="proof-section card">
+        <h2>A) Step Completion Summary</h2>
+        <ul id="step-summary" class="step-summary"></ul>
+      </section>
+
+      <section class="proof-section card">
+        <h2>B) Artifact Collection Inputs</h2>
+        <div class="form-group">
+          <label for="proof-lovable">Lovable Project Link</label>
+          <input type="url" id="proof-lovable" class="input proof-input" placeholder="https://...">
+          <span id="proof-lovable-error" class="proof-error" style="display: none;">Enter a valid URL (https://...)</span>
+        </div>
+        <div class="form-group">
+          <label for="proof-github">GitHub Repository Link</label>
+          <input type="url" id="proof-github" class="input proof-input" placeholder="https://github.com/...">
+          <span id="proof-github-error" class="proof-error" style="display: none;">Enter a valid URL (https://...)</span>
+        </div>
+        <div class="form-group">
+          <label for="proof-deployed">Deployed URL (Vercel or equivalent)</label>
+          <input type="url" id="proof-deployed" class="input proof-input" placeholder="https://...">
+          <span id="proof-deployed-error" class="proof-error" style="display: none;">Enter a valid URL (https://...)</span>
+        </div>
+      </section>
+
+      <div class="proof-actions">
+        <button type="button" id="proof-copy-btn" class="btn btn-primary">Copy Final Submission</button>
+      </div>
+    </main>
+  </div>
+
+  <script src="test-checklist.js"></script>
+  <script src="proof-artifacts.js"></script>
+  <script>
+    (function() {
+      const STEP_NAMES = [
+        'Design System',
+        'Route Skeleton',
+        'App Skeleton',
+        'Job Data & Dashboard',
+        'Preferences & Match Score',
+        'Daily Digest',
+        'Status Tracking',
+        'Test Checklist'
+      ];
+
+      const stepList = document.getElementById('step-summary');
+      const lovableInput = document.getElementById('proof-lovable');
+      const githubInput = document.getElementById('proof-github');
+      const deployedInput = document.getElementById('proof-deployed');
+
+      function renderStepSummary() {
+        const testsPassed = allTestsPassed();
+        const step8Completed = testsPassed;
+        const statuses = [true, true, true, true, true, true, true, step8Completed];
+        stepList.innerHTML = STEP_NAMES.map(function(name, i) {
+          const status = statuses[i] ? 'Completed' : 'Pending';
+          return '<li class="step-item"><span class="step-name">' + name + '</span><span class="step-status step-status-' + (statuses[i] ? 'completed' : 'pending') + '">' + status + '</span></li>';
+        }).join('');
+      }
+
+      function validateAndSave(inputId, errorId, key) {
+        const input = document.getElementById(inputId);
+        const err = document.getElementById(errorId);
+        const val = input.value.trim();
+        if (val && !isValidUrl(val)) {
+          err.style.display = 'block';
+          return;
+        }
+        err.style.display = 'none';
+        const a = getProofArtifacts();
+        a[key] = val;
+        setProofArtifacts(a);
+      }
+
+      const artifacts = getProofArtifacts();
+      lovableInput.value = artifacts.lovableLink;
+      githubInput.value = artifacts.githubLink;
+      deployedInput.value = artifacts.deployedUrl;
+
+      lovableInput.addEventListener('blur', function() { validateAndSave('proof-lovable', 'proof-lovable-error', 'lovableLink'); });
+      githubInput.addEventListener('blur', function() { validateAndSave('proof-github', 'proof-github-error', 'githubLink'); });
+      deployedInput.addEventListener('blur', function() { validateAndSave('proof-deployed', 'proof-deployed-error', 'deployedUrl'); });
+
+      lovableInput.addEventListener('input', function() {
+        const a = getProofArtifacts();
+        a.lovableLink = this.value.trim();
+        setProofArtifacts(a);
+        document.getElementById('proof-lovable-error').style.display = (this.value.trim() && !isValidUrl(this.value.trim())) ? 'block' : 'none';
+      });
+      githubInput.addEventListener('input', function() {
+        const a = getProofArtifacts();
+        a.githubLink = this.value.trim();
+        setProofArtifacts(a);
+        document.getElementById('proof-github-error').style.display = (this.value.trim() && !isValidUrl(this.value.trim())) ? 'block' : 'none';
+      });
+      deployedInput.addEventListener('input', function() {
+        const a = getProofArtifacts();
+        a.deployedUrl = this.value.trim();
+        setProofArtifacts(a);
+        document.getElementById('proof-deployed-error').style.display = (this.value.trim() && !isValidUrl(this.value.trim())) ? 'block' : 'none';
+      });
+
+      document.getElementById('proof-copy-btn').addEventListener('click', function() {
+        const a = getProofArtifacts();
+        const text = [
+          '------------------------------------------',
+          'Job Notification Tracker — Final Submission',
+          '------------------------------------------',
+          '',
+          'Lovable Project:',
+          a.lovableLink || '(not provided)',
+          '',
+          'GitHub Repository:',
+          a.githubLink || '(not provided)',
+          '',
+          'Live Deployment:',
+          a.deployedUrl || '(not provided)',
+          '',
+          'Core Features:',
+          '- Intelligent match scoring',
+          '- Daily digest simulation',
+          '- Status tracking',
+          '- Test checklist enforced',
+          '------------------------------------------'
+        ].join('\n');
+        navigator.clipboard.writeText(text).then(function() {
+          var btn = document.getElementById('proof-copy-btn');
+          btn.textContent = 'Copied';
+          setTimeout(function() { btn.textContent = 'Copy Final Submission'; }, 2000);
+        });
+      });
+
+      renderStepSummary();
+      window.addEventListener('storage', function() { renderStepSummary(); });
+    })();
+  </script>
+</body>
+</html>

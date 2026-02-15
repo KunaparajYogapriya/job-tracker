@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ship — Job Notification Tracker</title>
+  <link rel="stylesheet" href="../kodnest-design-system/tokens.css">
+  <link rel="stylesheet" href="../kodnest-design-system/base.css">
+  <link rel="stylesheet" href="../app.css">
+  <link rel="stylesheet" href="test-checklist.css">
+</head>
+<body>
+  <div class="layout">
+    <nav class="app-nav">
+      <a href="../index.html" class="app-nav-brand">Job Notification Tracker</a>
+      <div class="app-nav-links">
+        <a href="../dashboard.html">Dashboard</a>
+        <a href="../saved.html">Saved</a>
+        <a href="../digest.html">Digest</a>
+        <a href="../settings.html">Settings</a>
+        <a href="../proof.html">Proof</a>
+      </div>
+    </nav>
+    <main class="app-main">
+      <div id="ship-locked" class="ship-locked card" style="display: none;">
+        <p id="ship-status-badge" class="ship-status-badge ship-status-in-progress">In Progress</p>
+        <h2>Ship locked</h2>
+        <p>Complete all items in the Test Checklist and provide all proof links (Lovable, GitHub, Deployed URL) before shipping.</p>
+        <a href="07-test.html" class="btn btn-primary" style="margin-right: var(--space-xs);">Test Checklist</a>
+        <a href="proof.html" class="btn btn-secondary">Proof &amp; Artifacts</a>
+      </div>
+      <div id="ship-ready" class="ship-ready card" style="display: none;">
+        <p class="ship-status-badge ship-status-shipped">Shipped</p>
+        <h2>Ready to ship</h2>
+        <p>All tests passed and all proof links provided. You can proceed to ship.</p>
+        <p class="ship-success-message">Project 1 Shipped Successfully.</p>
+      </div>
+    </main>
+  </div>
+
+  <script src="proof-artifacts.js"></script>
+  <script>
+    (function() {
+      const TEST_CHECKLIST_KEY = 'jobTrackerTestChecklist';
+      const TEST_COUNT = 10;
+
+      function allTestsPassed() {
+        try {
+          const raw = localStorage.getItem(TEST_CHECKLIST_KEY);
+          if (!raw) return false;
+          const arr = JSON.parse(raw);
+          if (!Array.isArray(arr) || arr.length !== TEST_COUNT) return false;
+          return arr.every(Boolean);
+        } catch {
+          return false;
+        }
+      }
+
+      function getShipStatus() {
+        const testsOk = allTestsPassed();
+        const linksOk = typeof allProofLinksProvided === 'function' && allProofLinksProvided();
+        if (testsOk && linksOk) return 'shipped';
+        const a = typeof getProofArtifacts === 'function' ? getProofArtifacts() : { lovableLink: '', githubLink: '', deployedUrl: '' };
+        const hasAny = (a.lovableLink && a.lovableLink.trim()) || (a.githubLink && a.githubLink.trim()) || (a.deployedUrl && a.deployedUrl.trim());
+        if (hasAny || !testsOk) return 'in_progress';
+        return 'not_started';
+      }
+
+      const status = getShipStatus();
+      const locked = document.getElementById('ship-locked');
+      const ready = document.getElementById('ship-ready');
+      const badgeEl = document.getElementById('ship-status-badge');
+
+      if (status === 'shipped') {
+        ready.style.display = 'block';
+      } else {
+        locked.style.display = 'block';
+        if (badgeEl) {
+          badgeEl.textContent = status === 'not_started' ? 'Not Started' : 'In Progress';
+          badgeEl.className = 'ship-status-badge ship-status-' + (status === 'not_started' ? 'not-started' : 'in-progress');
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
