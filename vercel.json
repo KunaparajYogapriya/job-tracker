@@ -1,0 +1,13 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/dashboard", "destination": "/dashboard.html" },
+    { "source": "/settings", "destination": "/settings.html" },
+    { "source": "/saved", "destination": "/saved.html" },
+    { "source": "/digest", "destination": "/digest.html" },
+    { "source": "/proof", "destination": "/proof.html" },
+    { "source": "/jt/proof", "destination": "/jt/proof.html" },
+    { "source": "/jt/07-test", "destination": "/jt/07-test.html" },
+    { "source": "/jt/08-ship", "destination": "/jt/08-ship.html" }
+  ]
+}
